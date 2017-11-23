@@ -1,0 +1,352 @@
+{
+  "config": [
+    {
+      "config": {
+        "activation": "relu",
+        "data_format": "channels_last",
+        "kernel_regularizer": null,
+        "dilation_rate": [
+          1,
+          1
+        ],
+        "dtype": "float32",
+        "kernel_initializer": {
+          "config": {
+            "mode": "fan_avg",
+            "distribution": "uniform",
+            "scale": 1.0,
+            "seed": null
+          },
+          "class_name": "VarianceScaling"
+        },
+        "bias_regularizer": null,
+        "kernel_size": [
+          2,
+          2
+        ],
+        "bias_initializer": {
+          "config": {},
+          "class_name": "Zeros"
+        },
+        "kernel_constraint": null,
+        "batch_input_shape": [
+          null,
+          224,
+          224,
+          3
+        ],
+        "trainable": true,
+        "bias_constraint": null,
+        "use_bias": true,
+        "activity_regularizer": null,
+        "padding": "same",
+        "filters": 16,
+        "strides": [
+          1,
+          1
+        ],
+        "name": "conv2d_6"
+      },
+      "class_name": "Conv2D"
+    },
+    {
+      "config": {
+        "pool_size": [
+          2,
+          2
+        ],
+        "name": "max_pooling2d_6",
+        "trainable": true,
+        "strides": [
+          2,
+          2
+        ],
+        "padding": "valid",
+        "data_format": "channels_last"
+      },
+      "class_name": "MaxPooling2D"
+    },
+    {
+      "config": {
+        "activation": "relu",
+        "data_format": "channels_last",
+        "kernel_regularizer": null,
+        "dilation_rate": [
+          1,
+          1
+        ],
+        "bias_initializer": {
+          "config": {},
+          "class_name": "Zeros"
+        },
+        "kernel_initializer": {
+          "config": {
+            "mode": "fan_avg",
+            "distribution": "uniform",
+            "scale": 1.0,
+            "seed": null
+          },
+          "class_name": "VarianceScaling"
+        },
+        "bias_regularizer": null,
+        "kernel_size": [
+          2,
+          2
+        ],
+        "kernel_constraint": null,
+        "bias_constraint": null,
+        "trainable": true,
+        "use_bias": true,
+        "activity_regularizer": null,
+        "padding": "same",
+        "filters": 16,
+        "strides": [
+          1,
+          1
+        ],
+        "name": "conv2d_7"
+      },
+      "class_name": "Conv2D"
+    },
+    {
+      "config": {
+        "pool_size": [
+          2,
+          2
+        ],
+        "name": "max_pooling2d_7",
+        "trainable": true,
+        "strides": [
+          2,
+          2
+        ],
+        "padding": "valid",
+        "data_format": "channels_last"
+      },
+      "class_name": "MaxPooling2D"
+    },
+    {
+      "config": {
+        "activation": "relu",
+        "data_format": "channels_last",
+        "kernel_regularizer": null,
+        "dilation_rate": [
+          1,
+          1
+        ],
+        "bias_initializer": {
+          "config": {},
+          "class_name": "Zeros"
+        },
+        "kernel_initializer": {
+          "config": {
+            "mode": "fan_avg",
+            "distribution": "uniform",
+            "scale": 1.0,
+            "seed": null
+          },
+          "class_name": "VarianceScaling"
+        },
+        "bias_regularizer": null,
+        "kernel_size": [
+          2,
+          2
+        ],
+        "kernel_constraint": null,
+        "bias_constraint": null,
+        "trainable": true,
+        "use_bias": true,
+        "activity_regularizer": null,
+        "padding": "same",
+        "filters": 32,
+        "strides": [
+          1,
+          1
+        ],
+        "name": "conv2d_8"
+      },
+      "class_name": "Conv2D"
+    },
+    {
+      "config": {
+        "pool_size": [
+          2,
+          2
+        ],
+        "name": "max_pooling2d_8",
+        "trainable": true,
+        "strides": [
+          2,
+          2
+        ],
+        "padding": "valid",
+        "data_format": "channels_last"
+      },
+      "class_name": "MaxPooling2D"
+    },
+    {
+      "config": {
+        "activation": "relu",
+        "data_format": "channels_last",
+        "kernel_regularizer": null,
+        "dilation_rate": [
+          1,
+          1
+        ],
+        "bias_initializer": {
+          "config": {},
+          "class_name": "Zeros"
+        },
+        "kernel_initializer": {
+          "config": {
+            "mode": "fan_avg",
+            "distribution": "uniform",
+            "scale": 1.0,
+            "seed": null
+          },
+          "class_name": "VarianceScaling"
+        },
+        "bias_regularizer": null,
+        "kernel_size": [
+          2,
+          2
+        ],
+        "kernel_constraint": null,
+        "bias_constraint": null,
+        "trainable": true,
+        "use_bias": true,
+        "activity_regularizer": null,
+        "padding": "same",
+        "filters": 32,
+        "strides": [
+          1,
+          1
+        ],
+        "name": "conv2d_9"
+      },
+      "class_name": "Conv2D"
+    },
+    {
+      "config": {
+        "pool_size": [
+          2,
+          2
+        ],
+        "name": "max_pooling2d_9",
+        "trainable": true,
+        "strides": [
+          2,
+          2
+        ],
+        "padding": "valid",
+        "data_format": "channels_last"
+      },
+      "class_name": "MaxPooling2D"
+    },
+    {
+      "config": {
+        "activation": "relu",
+        "data_format": "channels_last",
+        "kernel_regularizer": null,
+        "dilation_rate": [
+          1,
+          1
+        ],
+        "bias_initializer": {
+          "config": {},
+          "class_name": "Zeros"
+        },
+        "kernel_initializer": {
+          "config": {
+            "mode": "fan_avg",
+            "distribution": "uniform",
+            "scale": 1.0,
+            "seed": null
+          },
+          "class_name": "VarianceScaling"
+        },
+        "bias_regularizer": null,
+        "kernel_size": [
+          2,
+          2
+        ],
+        "kernel_constraint": null,
+        "bias_constraint": null,
+        "trainable": true,
+        "use_bias": true,
+        "activity_regularizer": null,
+        "padding": "same",
+        "filters": 32,
+        "strides": [
+          1,
+          1
+        ],
+        "name": "conv2d_10"
+      },
+      "class_name": "Conv2D"
+    },
+    {
+      "config": {
+        "pool_size": [
+          4,
+          4
+        ],
+        "name": "max_pooling2d_10",
+        "trainable": true,
+        "strides": [
+          4,
+          4
+        ],
+        "padding": "valid",
+        "data_format": "channels_last"
+      },
+      "class_name": "MaxPooling2D"
+    },
+    {
+      "config": {
+        "name": "flatten_2",
+        "trainable": true
+      },
+      "class_name": "Flatten"
+    },
+    {
+      "config": {
+        "rate": 0.2,
+        "name": "dropout_2",
+        "trainable": true
+      },
+      "class_name": "Dropout"
+    },
+    {
+      "config": {
+        "activation": "softmax",
+        "kernel_regularizer": null,
+        "units": 3,
+        "bias_initializer": {
+          "config": {},
+          "class_name": "Zeros"
+        },
+        "kernel_initializer": {
+          "config": {
+            "mode": "fan_avg",
+            "distribution": "uniform",
+            "scale": 1.0,
+            "seed": null
+          },
+          "class_name": "VarianceScaling"
+        },
+        "bias_regularizer": null,
+        "kernel_constraint": null,
+        "trainable": true,
+        "use_bias": true,
+        "activity_regularizer": null,
+        "name": "dense_2",
+        "bias_constraint": null
+      },
+      "class_name": "Dense"
+    }
+  ],
+  "backend": "tensorflow",
+  "class_name": "Sequential",
+  "keras_version": "2.0.2"
+}
