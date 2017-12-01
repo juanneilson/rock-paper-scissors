@@ -37,6 +37,7 @@ class ModelOutput extends React.Component {
     ops.assign(dataProcessedTensor.pick(null, null, 0), dataTensor.pick(null, null, 2))//2))
     ops.assign(dataProcessedTensor.pick(null, null, 1), dataTensor.pick(null, null, 1))//1))
     ops.assign(dataProcessedTensor.pick(null, null, 2), dataTensor.pick(null, null, 0))//0))
+    ops.mulseq(dataProcessedTensor, 1.0/255.0)
     const inputData = { input: dataProcessedTensor.data }
     console.log(inputData)
     return inputData;
