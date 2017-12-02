@@ -3,6 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import ModelOutput from './rpsmodel.js';
 import Webcam from 'react-webcam';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppBar from 'material-ui/AppBar';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import Paper from 'material-ui/Paper';
+
 
 /*
 function StartButton(props) { //Idéntica a una clase que tiene sólo render (Functional Component)
@@ -230,44 +236,47 @@ class Site extends React.Component {
 
     return (
       <div className="site">
-        <div className="Title">
-            <h1>Rock-Paper-Scissors</h1>
-        </div>
-        <form>
-            <h3>Choose an image acquisition method</h3>
-            <div className="radio">
-              <label>
-                <input type="radio" value="webcam" checked={this.state.selectedImgSrc === 'webcam'} onChange={this.handleOptionChange}/>
-                Use webcam
-              </label>
+        <AppBar
+            title="Rock-Paper-Scissors"
+            iconClassNameRight="muidocs-icon-navigation-expand-more"
+        />
+        <Paper>
+            <form>
+                <h3>Choose an image acquisition method</h3>
+                <div className="radio">
+                  <label>
+                    <input type="radio" value="webcam" checked={this.state.selectedImgSrc === 'webcam'} onChange={this.handleOptionChange}/>
+                    Use webcam
+                  </label>
+                </div>
+                <div className="radio">
+                  <label>
+                    <input type="radio" value="file" checked={this.state.selectedImgSrc === 'file'} onChange={this.handleOptionChange}/>
+                    Load from file
+                  </label>
+                </div>
+            </form>
+            <div>
+                <StartButton onClick={() => this.handleClick()} />
             </div>
-            <div className="radio">
-              <label>
-                <input type="radio" value="file" checked={this.state.selectedImgSrc === 'file'} onChange={this.handleOptionChange}/>
-                Load from file
-              </label>
+            <div>
+                {this.state.showCountDown ? <Timer handler = {() => this.finishCountdown()}/> : null}
             </div>
-        </form>
-        <div>
-            <StartButton onClick={() => this.handleClick()} />
-        </div>
-        <div>
-            {this.state.showCountDown ? <Timer handler = {() => this.finishCountdown()}/> : null}
-        </div>
-        <div>
-            <HiddenWebcam selectedImgSrc={this.state.selectedImgSrc} setRef={this.setRef}/>
-        </div>
-        <div>
-            <ImageFile show={this.state.selectedImgSrc==='file'} onLoad={this.onFileImageLoad}/>
-        </div>
-        <div>
-            <ModelOutput ref={this.modelRef}/>
-        </div>
+            <div>
+                <HiddenWebcam selectedImgSrc={this.state.selectedImgSrc} setRef={this.setRef}/>
+            </div>
+            <div>
+                <ImageFile show={this.state.selectedImgSrc==='file'} onLoad={this.onFileImageLoad}/>
+            </div>
+            <div>
+                <ModelOutput ref={this.modelRef}/>
+            </div>
 
 
-        <div>
-            <canvas id="myCanvas" />
-        </div>
+            <div>
+                <canvas id="myCanvas" />
+            </div>
+        </Paper>
 
       </div>
     );
@@ -312,7 +321,9 @@ class Timer extends React.Component{
 // ========================================
 
 ReactDOM.render(
-  <Site />,
+  <MuiThemeProvider  muiTheme={getMuiTheme(darkBaseTheme)}>
+    <Site />
+  </MuiThemeProvider>,
   document.getElementById('root')
 );
 

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "keras-js": "^0.3.0",
+    "material-ui": "^0.19.4",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-scripts": "1.0.17",
