@@ -1,51 +1,27 @@
 body {
   /*font: 14px "Century Gothic", Futura, sans-serif;*/
   font-family: 'Roboto', sans-serif;
-  margin: 20px;
+  margin: 0px;
 }
 
-ol, ul {
-  padding-left: 30px;
+
+#webcam-div{
+  padding-top: 15px;
 }
 
-.board-row:after {
-  clear: both;
-  content: "";
-  display: table;
+#webcam-div div{
+  width: 350px;
+  height: 260px;
+
+  margin: 0 auto;
+
 }
 
-.status {
-  margin-bottom: 10px;
-}
-
-.square {
-  background: #fff;
-  border: 1px solid #999;
-  float: left;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 34px;
-  height: 34px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
-  width: 34px;
-}
-
-.square:focus {
-  outline: none;
-}
-
-.kbd-navigation .square:focus {
-  background: #ddd;
-}
-
-.game {
+#webcam-div div div{
+  width:100%;
+  height:100%;
   display: flex;
-  flex-direction: row;
-}
+  align-items: center;
+  justify-content: center;
 
-.game-info {
-  margin-left: 20px;
 }

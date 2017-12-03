@@ -9,17 +9,33 @@ import AppBar from 'material-ui/AppBar';
 //import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 //import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
 
 
- function HiddenWebcam(props) {
+class HiddenWebcam extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        active: false,
+    };
+  }
+
+  render() {
+ //function HiddenWebcam(props) {
       console.log('HW')
-      console.log(props)
-      const isShown = props.selectedImgSrc === 'webcam';
+      console.log(this.props)
+      const isShown = this.props.selectedImgSrc === 'webcam';
       if (isShown) {
-        return (<Webcam audio={false} width={350} height={260} screenshotFormat="image/jpeg" ref={props.setRef}/>);
+        if (this.state.active){
+            return (<Webcam audio={false} width={350} height={260} screenshotFormat="image/jpeg" ref={this.props.setRef}/>);
+        }
+        else{
+            return (<RaisedButton label="Start Webcam" primary={true} onClick={() => this.setState({active:true})}/>)
+        }
       }
       return null;
     }
+}
 
 
 class StartButton extends React.Component {
@@ -42,6 +58,7 @@ class ImageFile extends React.Component {
     this.loadImage();
   }
 
+  //This method loads image from file
   loadImage(){
     console.log('loadImage')
     var img = new Image();
@@ -85,7 +102,7 @@ class Site extends React.Component {
     super(props);
     this.state = {
         showCountDown: false,
-        selectedImgSrc:'',
+        selectedImgSrc:'webcam',
         //imageSource: null,
     };
     this.hideStart = this.hideStart.bind(this)
@@ -181,29 +198,18 @@ class Site extends React.Component {
             iconClassNameRight="muidocs-icon-navigation-expand-more"
         />
         <Paper>
-            <form>
-                <h3>Choose an image acquisition method</h3>
-                <div className="radio">
-                  <label>
-                    <input type="radio" value="webcam" checked={this.state.selectedImgSrc === 'webcam'} onChange={this.handleOptionChange}/>
-                    Use webcam
-                  </label>
-                </div>
-                <div className="radio">
-                  <label>
-                    <input type="radio" value="file" checked={this.state.selectedImgSrc === 'file'} onChange={this.handleOptionChange}/>
-                    Load from file
-                  </label>
-                </div>
-            </form>
-            <div>
-                <StartButton onClick={() => this.handleClick()} />
-            </div>
             <div>
                 {this.state.showCountDown ? <Timer handler = {() => this.finishCountdown()}/> : null}
             </div>
+            <div id="webcam-div">
+                <div>
+                    <Paper zDepth={2} >
+                        <HiddenWebcam selectedImgSrc={this.state.selectedImgSrc} setRef={this.setRef}/>
+                    </Paper>
+                </div>
+            </div>
             <div>
-                <HiddenWebcam selectedImgSrc={this.state.selectedImgSrc} setRef={this.setRef}/>
+                <StartButton onClick={() => this.handleClick()} />
             </div>
             <div>
                 <ImageFile show={this.state.selectedImgSrc==='file'} onLoad={this.onFileImageLoad}/>
@@ -226,3 +232,21 @@ class Site extends React.Component {
 
 // ========================================
 export default Site;
+
+/*
+<form>
+                <h3>Choose an image acquisition method</h3>
+                <div className="radio">
+                  <label>
+                    <input type="radio" value="webcam" checked={this.state.selectedImgSrc === 'webcam'} onChange={this.handleOptionChange}/>
+                    Use webcam
+                  </label>
+                </div>
+                <div className="radio">
+                  <label>
+                    <input type="radio" value="file" checked={this.state.selectedImgSrc === 'file'} onChange={this.handleOptionChange}/>
+                    Load from file
+                  </label>
+                </div>
+            </form>
+            */
