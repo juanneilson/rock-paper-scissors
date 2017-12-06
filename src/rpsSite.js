@@ -10,6 +10,10 @@ import AppBar from 'material-ui/AppBar';
 //import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
+//import FlatButton from 'material-ui/FlatButton';
+import FontIcon from 'material-ui/FontIcon';
+import { Row, Col } from 'react-grid-system';
+
 
 
 class HiddenWebcam extends React.Component {
@@ -18,6 +22,13 @@ class HiddenWebcam extends React.Component {
     this.state = {
         active: false,
     };
+  }
+
+  onStartWebcamClick(){
+    this.setState({active:true})
+    if (this.props.onStart){
+        this.props.onStart();
+    }
   }
 
   render() {
@@ -30,21 +41,28 @@ class HiddenWebcam extends React.Component {
             return (<Webcam audio={false} width={350} height={260} screenshotFormat="image/jpeg" ref={this.props.setRef}/>);
         }
         else{
-            return (<RaisedButton label="Start Webcam" primary={true} onClick={() => this.setState({active:true})}/>)
+            return (<RaisedButton label="Start Webcam" primary={true} onClick={() => this.onStartWebcamClick() } />);
         }
-      }
-      return null;
     }
+    return null;
+  }
 }
-
 
 class StartButton extends React.Component {
   render() {
-    return (
-      <button {...this.props}>
-        Start
-      </button>
-    );
+    if(this.props.show===true){
+        return (
+          <RaisedButton
+              label="Play"
+              labelPosition="after"
+              primary={true}
+              icon={<FontIcon className="material-icons" >play_arrow</FontIcon>}
+              onClick={this.props.onClick}
+           />
+
+        );
+    }
+    return null
   }
 }
 
@@ -97,12 +115,12 @@ class ImageFile extends React.Component {
 
 class Site extends React.Component {
 
-
   constructor(props) {
     super(props);
     this.state = {
         showCountDown: false,
         selectedImgSrc:'webcam',
+        webcamIsActive: false
         //imageSource: null,
     };
     this.hideStart = this.hideStart.bind(this)
@@ -197,20 +215,29 @@ class Site extends React.Component {
             title="Rock-Paper-Scissors"
             iconClassNameRight="muidocs-icon-navigation-expand-more"
         />
+
         <Paper>
+            <Row>
+                <Col sm={8}>
+                    <div>
+                        <StartButton onClick={() => this.handleClick()} show={this.state.webcamIsActive}/>
+                    </div>
+                </Col>
+                <Col sm={4}>
+                     <div id="webcam-div">
+                        <div>
+                            <Paper zDepth={2} >
+                                <HiddenWebcam selectedImgSrc={this.state.selectedImgSrc} setRef={this.setRef} onStart={() => this.setState({webcamIsActive:true})}/>
+                            </Paper>
+                        </div>
+                    </div>
+                </Col>
+            </Row>
             <div>
                 {this.state.showCountDown ? <Timer handler = {() => this.finishCountdown()}/> : null}
             </div>
-            <div id="webcam-div">
-                <div>
-                    <Paper zDepth={2} >
-                        <HiddenWebcam selectedImgSrc={this.state.selectedImgSrc} setRef={this.setRef}/>
-                    </Paper>
-                </div>
-            </div>
-            <div>
-                <StartButton onClick={() => this.handleClick()} />
-            </div>
+
+
             <div>
                 <ImageFile show={this.state.selectedImgSrc==='file'} onLoad={this.onFileImageLoad}/>
             </div>
