@@ -13,7 +13,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 //import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import { Row, Col } from 'react-grid-system';
-
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
 
 class HiddenWebcam extends React.Component {
@@ -65,6 +65,44 @@ class StartButton extends React.Component {
     return null
   }
 }
+
+class LastResult extends React.Component {
+  render() {
+    if(this.props.show===true){
+        return (
+          <p>Hola {this.props.prediction.prediction}</p>
+
+        );
+    }
+    return null
+  }
+}
+
+// Modern syntax < React 16.2.0
+// You need to wrap in an extra element like div here
+const HistResults = ({predictions, show}) => (
+  <div>
+    <h2>Your previous games</h2>
+    {predictions.filter(pred => pred.id < predictions.length-1).map(pred => (
+        <Card className="hist_prediction" key={pred.id}>
+            <CardHeader
+              title={"Game number " + pred.id}
+              subtitle={"Detected " + pred.prediction}
+              actAsExpander={true}
+              showExpandableButton={true}
+            />
+
+            <CardText expandable={true}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+              Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
+              Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+            </CardText>
+          </Card>
+
+    ))}
+  </div>
+);
 
 class ImageFile extends React.Component {
 
@@ -120,7 +158,9 @@ class Site extends React.Component {
     this.state = {
         showCountDown: false,
         selectedImgSrc:'webcam',
-        webcamIsActive: false
+        webcamIsActive: false,
+        predictions: [],
+        predCounter: 0,
         //imageSource: null,
     };
     this.hideStart = this.hideStart.bind(this)
@@ -175,7 +215,7 @@ class Site extends React.Component {
   }
 
 
-  processImage(){
+    processImage(){
     //const imageSrc = this.webcam.getScreenshot();//sirve para mostrar
     //const imageData = this.getScreenshotImageData();
 
@@ -187,7 +227,7 @@ class Site extends React.Component {
     ctx.putImageData(this.state.imageData, 0, 0);//,10,70);
     //Predict
     this.model_obj.predict(this.state.imageData);
-  }
+    }
 
     handleOptionChange (changeEvent) {
       this.setState({
@@ -201,6 +241,17 @@ class Site extends React.Component {
         this.setState({
             imageData: imageData
         });
+    }
+
+    onPrediction(predictionState){
+        console.log('onPrediction')
+        console.log(predictionState)
+        var newArray = this.state.predictions.slice();
+        var newResult = {prediction: predictionState['prediction'],
+                            id: this.state.predCounter,
+                        }
+        newArray.unshift(newResult);
+        this.setState({predictions:newArray, predCounter: this.state.predCounter +1})
     }
 
 /*
@@ -222,6 +273,12 @@ class Site extends React.Component {
                     <div>
                         <StartButton onClick={() => this.handleClick()} show={this.state.webcamIsActive}/>
                     </div>
+                    <div>
+                        <LastResult show={this.state.predCounter>0} prediction={this.state.predictions[0]}/>
+                    </div>
+                     <div>
+                        <canvas id="myCanvas" />
+                    </div>
                 </Col>
                 <Col sm={4}>
                      <div id="webcam-div">
@@ -242,13 +299,14 @@ class Site extends React.Component {
                 <ImageFile show={this.state.selectedImgSrc==='file'} onLoad={this.onFileImageLoad}/>
             </div>
             <div>
-                <ModelOutput ref={this.modelRef}/>
+                <HistResults predictions={this.state.predictions}/>
             </div>
-
-
             <div>
-                <canvas id="myCanvas" />
+                <ModelOutput show = {false} ref={this.modelRef} onPrediction={(aState) => this.onPrediction(aState)}/>
             </div>
+
+
+
         </Paper>
 
       </div>

@@ -66,27 +66,33 @@ class ModelOutput extends React.Component {
     var inputData = this.preprocess(imageData)
     //Realizar predicción
     this.model.predict(inputData).then(outputData => {
-    // outputData is an object keyed by names of the output layers
-    // or `output` for Sequential models
-    // e.g.,
-    // outputData['fc1000']
-    //Almacenar resultado
-    var predictionVec = outputData['output']
-    var i =this.indexOfMax(predictionVec);
-    var classLabels = ['paper', 'rock', 'scissors'];
+        // outputData is an object keyed by names of the output layers
+        // or `output` for Sequential models
+        // e.g.,
+        // outputData['fc1000']
+        //Almacenar resultado
+        var predictionVec = outputData['output']
+        var i =this.indexOfMax(predictionVec);
+        var classLabels = ['paper', 'rock', 'scissors'];
 
-    console.log('vec: ' + predictionVec + ', i: ' + i)
-    this.setState({'prediction': classLabels[i]})
-  })
+        console.log('vec: ' + predictionVec + ', i: ' + i)
+        this.setState({'prediction': classLabels[i]})
+        if(this.props.onPrediction){
+            this.props.onPrediction(this.state);
+        }
+    })
 
   }
 
 
 
   render() {
-    return (
-      <p>Status: {this.state.status}, predicción: {this.state.prediction}</p>
-    );
+    if (this.props.show === true){
+        return (
+          <p>Status: {this.state.status}, predicción: {this.state.prediction}</p>
+        );
+    }
+    return null
   }
 }
 
