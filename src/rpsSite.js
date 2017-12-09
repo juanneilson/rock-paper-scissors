@@ -67,10 +67,24 @@ class StartButton extends React.Component {
 }
 
 class LastResult extends React.Component {
+    jsUcfirst(string)
+    {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
   render() {
     if(this.props.show===true){
         return (
-          <p>Hola {this.props.prediction.prediction}</p>
+            <Card id="human_game_paper">
+                <CardHeader
+                    title="Your move:"
+                />
+                <div>
+                    <img src={this.props.prediction.imageDataURL} />
+                    <div id="human_gesture_name">
+                        <p><strong>{this.jsUcfirst(this.props.prediction.prediction)}</strong></p>
+                    </div>
+                </div>
+            </Card>
 
         );
     }
@@ -82,12 +96,13 @@ class LastResult extends React.Component {
 // You need to wrap in an extra element like div here
 const HistResults = ({predictions, show}) => (
   <div>
-    <h2>Your previous games</h2>
+    { predictions.length>1 ? <h2>Your previous games</h2> : null }
     {predictions.filter(pred => pred.id < predictions.length-1).map(pred => (
         <Card className="hist_prediction" key={pred.id}>
             <CardHeader
               title={"Game number " + pred.id}
               subtitle={"Detected " + pred.prediction}
+              avatar={pred.imageDataURL}
               actAsExpander={true}
               showExpandableButton={true}
             />
@@ -161,6 +176,8 @@ class Site extends React.Component {
         webcamIsActive: false,
         predictions: [],
         predCounter: 0,
+        imageData: null,
+        imageDataURL: null,
         //imageSource: null,
     };
     this.hideStart = this.hideStart.bind(this)
@@ -220,11 +237,14 @@ class Site extends React.Component {
     //const imageData = this.getScreenshotImageData();
 
     //Draw data
-    var c=document.getElementById("myCanvas");
+    var c = document.createElement("canvas");
+    //var c=document.getElementById("myCanvas");
     var ctx=c.getContext("2d");
     ctx.canvas.width = 224;
     ctx.canvas.height = 224;
     ctx.putImageData(this.state.imageData, 0, 0);//,10,70);
+    //Store image as src data
+    this.state.imageDataURL = c.toDataURL("image/png");
     //Predict
     this.model_obj.predict(this.state.imageData);
     }
@@ -247,8 +267,9 @@ class Site extends React.Component {
         console.log('onPrediction')
         console.log(predictionState)
         var newArray = this.state.predictions.slice();
-        var newResult = {prediction: predictionState['prediction'],
+        var newResult = {   prediction: predictionState['prediction'],
                             id: this.state.predCounter,
+                            imageDataURL: this.state.imageDataURL
                         }
         newArray.unshift(newResult);
         this.setState({predictions:newArray, predCounter: this.state.predCounter +1})
@@ -267,47 +288,47 @@ class Site extends React.Component {
             iconClassNameRight="muidocs-icon-navigation-expand-more"
         />
 
-        <Paper>
-            <Row>
-                <Col sm={8}>
-                    <div>
-                        <StartButton onClick={() => this.handleClick()} show={this.state.webcamIsActive}/>
-                    </div>
-                    <div>
-                        <LastResult show={this.state.predCounter>0} prediction={this.state.predictions[0]}/>
-                    </div>
-                     <div>
-                        <canvas id="myCanvas" />
-                    </div>
-                </Col>
-                <Col sm={4}>
-                     <div id="webcam-div">
+
+            <div id="main_paper_div">
+                <Row id="first_row">
+                    <Col sm={8}>
                         <div>
-                            <Paper zDepth={2} >
-                                <HiddenWebcam selectedImgSrc={this.state.selectedImgSrc} setRef={this.setRef} onStart={() => this.setState({webcamIsActive:true})}/>
-                            </Paper>
+                            <StartButton onClick={() => this.handleClick()} show={this.state.webcamIsActive}/>
                         </div>
-                    </div>
-                </Col>
-            </Row>
-            <div>
-                {this.state.showCountDown ? <Timer handler = {() => this.finishCountdown()}/> : null}
+                        <div>
+                            <LastResult show={this.state.predCounter>0} prediction={this.state.predictions[0]}/>
+                        </div>
+
+                    </Col>
+                    <Col sm={4}>
+                         <div id="webcam-div">
+                            <div>
+                                <Paper zDepth={2} >
+                                    <HiddenWebcam selectedImgSrc={this.state.selectedImgSrc} setRef={this.setRef} onStart={() => this.setState({webcamIsActive:true})}/>
+                                </Paper>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+                <div>
+                    {this.state.showCountDown ? <Timer handler = {() => this.finishCountdown()}/> : null}
+                </div>
+
+
+                <div>
+                    <ImageFile show={this.state.selectedImgSrc==='file'} onLoad={this.onFileImageLoad}/>
+                </div>
+                <div>
+                    <HistResults predictions={this.state.predictions}/>
+                </div>
+                <div>
+                    <ModelOutput show = {false} ref={this.modelRef} onPrediction={(aState) => this.onPrediction(aState)}/>
+                </div>
             </div>
 
 
-            <div>
-                <ImageFile show={this.state.selectedImgSrc==='file'} onLoad={this.onFileImageLoad}/>
-            </div>
-            <div>
-                <HistResults predictions={this.state.predictions}/>
-            </div>
-            <div>
-                <ModelOutput show = {false} ref={this.modelRef} onPrediction={(aState) => this.onPrediction(aState)}/>
-            </div>
 
 
-
-        </Paper>
 
       </div>
     );

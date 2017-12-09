@@ -25,3 +25,29 @@ body {
   justify-content: center;
 
 }
+
+#main_paper_div{
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+#first_row{
+  min-height: 400px;
+}
+
+#human_game_paper{
+  width: 300px;
+}
+
+#human_game_paper img{
+  display:block;
+    margin:auto;
+}
+
+#human_game_paper{
+  text-align: center;
+}
+#human_gesture_name{
+  padding-bottom: 5px;
+}
+
