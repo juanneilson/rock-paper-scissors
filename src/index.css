@@ -26,6 +26,10 @@ body {
 
 }
 
+#play_button_div{
+  margin: 15px;
+}
+
 #main_paper_div{
   margin-left: 25px;
   margin-right: 25px;
@@ -49,5 +53,18 @@ body {
 }
 #human_gesture_name{
   padding-bottom: 5px;
+}
+
+.image_result{
+  width: 224px;
+  height: 224px;
+}
+
+.you_win{
+  background-color: #CDFECC;
+}
+
+.header_loose{
+  background-color: #FF8A8A;
 }
 

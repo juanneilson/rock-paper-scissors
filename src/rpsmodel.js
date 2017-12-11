@@ -14,7 +14,7 @@ class ModelOutput extends React.Component {
         weights: 'static/model/model_weights.buf',
         metadata: 'static/model/model_metadata.json'
       },
-      gpu: true
+      gpu: false
     })
     this.state = {
         status: 'Not Ready',

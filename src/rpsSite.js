@@ -72,14 +72,15 @@ class LastResult extends React.Component {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
   render() {
-    if(this.props.show===true){
+    if(this.props.show===true && this.props.prediction != null){
         return (
             <Card id="human_game_paper">
-                <CardHeader
-                    title="Your move:"
+                <CardHeader id="card_header"
+                    title={this.props.title}
+                    className={this.props.header_class}
                 />
                 <div>
-                    <img src={this.props.prediction.imageDataURL} />
+                    <img class="image_result" src={this.props.prediction.imageDataURL} />
                     <div id="human_gesture_name">
                         <p><strong>{this.jsUcfirst(this.props.prediction.prediction)}</strong></p>
                     </div>
@@ -96,15 +97,16 @@ class LastResult extends React.Component {
 // You need to wrap in an extra element like div here
 const HistResults = ({predictions, show}) => (
   <div>
-    { predictions.length>1 ? <h2>Your previous games</h2> : null }
-    {predictions.filter(pred => pred.id < predictions.length-1).map(pred => (
-        <Card className="hist_prediction" key={pred.id}>
+    { predictions.length>1 ? <h2>Your previous rounds</h2> : null }
+    {predictions.map(pred => (
+        <Card key={pred.human.id}>
             <CardHeader
-              title={"Game number " + pred.id}
-              subtitle={"Detected " + pred.prediction}
-              avatar={pred.imageDataURL}
+              title={"Round number " + pred.human.id}
+              subtitle={"Detected " + pred.human.prediction}
+              avatar={pred.human.imageDataURL}
               actAsExpander={true}
               showExpandableButton={true}
+              className={pred.result.resultString}
             />
 
             <CardText expandable={true}>
@@ -174,7 +176,8 @@ class Site extends React.Component {
         showCountDown: false,
         selectedImgSrc:'webcam',
         webcamIsActive: false,
-        predictions: [],
+        lastGame: null,
+        gameHistory: [],
         predCounter: 0,
         imageData: null,
         imageDataURL: null,
@@ -190,6 +193,7 @@ class Site extends React.Component {
   modelRef = (model_obj) => { this.model_obj = model_obj; };
 
   handleClick() {
+    this.pushLastGameToHistory();
     if(this.state.selectedImgSrc==='webcam'){
         this.setState({  showCountDown: true, });
     }
@@ -266,15 +270,56 @@ class Site extends React.Component {
     onPrediction(predictionState){
         console.log('onPrediction')
         console.log(predictionState)
-        var newArray = this.state.predictions.slice();
-        var newResult = {   prediction: predictionState['prediction'],
+
+        var human = {   prediction: predictionState['prediction'],
                             id: this.state.predCounter,
                             imageDataURL: this.state.imageDataURL
                         }
-        newArray.unshift(newResult);
-        this.setState({predictions:newArray, predCounter: this.state.predCounter +1})
+        var computer = this.makeComputerRandomMove()
+        var result = this.resolveGame(human.prediction, computer.prediction)
+
+        this.setState({lastGame:{human: human, computer: computer, result: result}, predCounter: this.state.predCounter +1})
     }
 
+    pushLastGameToHistory()
+    {
+        if(this.state.lastGame){
+            var newArray = this.state.gameHistory.slice();
+            newArray.unshift(this.state.lastGame);
+            this.setState({lastGame:null, gameHistory: newArray})
+        }
+    }
+
+    makeComputerRandomMove(){
+        var possibleResults = ["rock", "paper", "scissors"]
+        var index = Math.floor((Math.random() * possibleResults.length));
+        var newResult = {   prediction: possibleResults[index],
+                            id: this.state.predCounter,
+                            imageDataURL: "/static/images/" + possibleResults[index] + ".png"
+                        }
+        return newResult;
+    }
+
+    resolveGame(strHuman, strComputer){
+        var modifier = {human:0, computer:0, resultString: "tie"}
+        //var new_scores = {human: scores["human"], computer: scores["computer"]};
+        if(strHuman === strComputer){
+            return modifier;
+        }
+        else if ((strHuman === 'rock' && strComputer === 'scissors') ||
+                 (strHuman === 'paper' && strComputer === 'rock') ||
+                 (strHuman === 'scissors' && strComputer === 'paper') ){
+            modifier['human'] += 1
+            modifier['resultString'] = 'you_win'
+        }
+        else{
+            modifier['resultString'] = 'you_loose'
+            modifier['computer'] += 1
+        }
+        return modifier;
+
+
+    }
 /*
 
 */
@@ -285,46 +330,53 @@ class Site extends React.Component {
       <div className="site">
         <AppBar
             title="Rock-Paper-Scissors"
-            iconClassNameRight="muidocs-icon-navigation-expand-more"
-        />
-
-
-            <div id="main_paper_div">
-                <Row id="first_row">
-                    <Col sm={8}>
-                        <div>
+            iconClassNameRight="muidocs-icon-navigation-expand-more" />
+        <div id="main_paper_div">
+            <Row id="first_row">
+                <Col sm={8}>
+                    <Row>
+                        <div  id="play_button_div">
                             <StartButton onClick={() => this.handleClick()} show={this.state.webcamIsActive}/>
                         </div>
+                    </Row>
+                    <Row>
+                        <Col sm={6}>
+                            {this.state.lastGame!=null?<LastResult show={this.state.predCounter>0}
+                                                                   title="Your move:"
+                                                                   prediction={this.state.lastGame.human}
+                                                                   header_class={this.state.lastGame.result.resultString} />: null }
+                        </Col>
+                        <Col sm={6}>
+                            {this.state.lastGame!=null?<LastResult show={this.state.predCounter>0} title="Computer's move:" prediction={this.state.lastGame.computer}/>: null }
+                        </Col>
+                    </Row>
+
+                </Col>
+                <Col sm={4}>
+                     <div id="webcam-div">
                         <div>
-                            <LastResult show={this.state.predCounter>0} prediction={this.state.predictions[0]}/>
+                            <Paper zDepth={2} >
+                                <HiddenWebcam selectedImgSrc={this.state.selectedImgSrc} setRef={this.setRef} onStart={() => this.setState({webcamIsActive:true})}/>
+                            </Paper>
                         </div>
-
-                    </Col>
-                    <Col sm={4}>
-                         <div id="webcam-div">
-                            <div>
-                                <Paper zDepth={2} >
-                                    <HiddenWebcam selectedImgSrc={this.state.selectedImgSrc} setRef={this.setRef} onStart={() => this.setState({webcamIsActive:true})}/>
-                                </Paper>
-                            </div>
-                        </div>
-                    </Col>
-                </Row>
-                <div>
-                    {this.state.showCountDown ? <Timer handler = {() => this.finishCountdown()}/> : null}
-                </div>
-
-
-                <div>
-                    <ImageFile show={this.state.selectedImgSrc==='file'} onLoad={this.onFileImageLoad}/>
-                </div>
-                <div>
-                    <HistResults predictions={this.state.predictions}/>
-                </div>
-                <div>
-                    <ModelOutput show = {false} ref={this.modelRef} onPrediction={(aState) => this.onPrediction(aState)}/>
-                </div>
+                    </div>
+                </Col>
+            </Row>
+            <div>
+                {this.state.showCountDown ? <Timer handler = {() => this.finishCountdown()}/> : null}
             </div>
+
+
+            <div>
+                <ImageFile show={this.state.selectedImgSrc==='file'} onLoad={this.onFileImageLoad}/>
+            </div>
+            <div>
+                <HistResults predictions={this.state.gameHistory}/>
+            </div>
+            <div>
+                <ModelOutput show = {false} ref={this.modelRef} onPrediction={(aState) => this.onPrediction(aState)}/>
+            </div>
+        </div>
 
 
 
