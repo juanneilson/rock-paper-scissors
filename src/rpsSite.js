@@ -80,7 +80,7 @@ class LastResult extends React.Component {
                     className={this.props.header_class}
                 />
                 <div>
-                    <img class="image_result" src={this.props.prediction.imageDataURL} />
+                    <img className="image_result" src={this.props.prediction.imageDataURL} />
                     <div id="human_gesture_name">
                         <p><strong>{this.jsUcfirst(this.props.prediction.prediction)}</strong></p>
                     </div>
@@ -118,6 +118,26 @@ const HistResults = ({predictions, show}) => (
           </Card>
 
     ))}
+  </div>
+);
+
+const Scores = ({result}) => (
+  <div>
+        <Card id="score_card">
+            <CardHeader
+              title={"Score"}
+              //subtitle={"Detected " + pred.human.prediction}
+              //avatar={pred.human.imageDataURL}
+              //actAsExpander={true}
+              //showExpandableButton={true}
+              //className={pred.result.resultString}
+            />
+            <CardText id="score_card_text">
+              <h2><FontIcon className="material-icons" >person</FontIcon>
+              <span>{result.human + " - " + result.computer}</span>
+              <FontIcon className="material-icons" >computer</FontIcon></h2>
+            </CardText>
+          </Card>
   </div>
 );
 
@@ -181,6 +201,7 @@ class Site extends React.Component {
         predCounter: 0,
         imageData: null,
         imageDataURL: null,
+        scores:{human:0, computer:0}
         //imageSource: null,
     };
     this.hideStart = this.hideStart.bind(this)
@@ -276,9 +297,10 @@ class Site extends React.Component {
                             imageDataURL: this.state.imageDataURL
                         }
         var computer = this.makeComputerRandomMove()
-        var result = this.resolveGame(human.prediction, computer.prediction)
+        var gameResult = this.resolveGame(human.prediction, computer.prediction)
+        var newScore = {human: this.state.scores.human + gameResult.human, computer: this.state.scores.computer + gameResult.computer}
 
-        this.setState({lastGame:{human: human, computer: computer, result: result}, predCounter: this.state.predCounter +1})
+        this.setState({lastGame:{human: human, computer: computer, result: gameResult}, predCounter: this.state.predCounter +1, scores: newScore})
     }
 
     pushLastGameToHistory()
@@ -353,8 +375,10 @@ class Site extends React.Component {
 
                 </Col>
                 <Col sm={4}>
+                    <Scores result={this.state.scores}/>
                      <div id="webcam-div">
                         <div>
+
                             <Paper zDepth={2} >
                                 <HiddenWebcam selectedImgSrc={this.state.selectedImgSrc} setRef={this.setRef} onStart={() => this.setState({webcamIsActive:true})}/>
                             </Paper>
