@@ -14,6 +14,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import { Row, Col } from 'react-grid-system';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import Avatar from 'material-ui/Avatar';
 
 
 class HiddenWebcam extends React.Component {
@@ -71,13 +72,15 @@ class LastResult extends React.Component {
     {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
-  render() {
+    render() {
     if(this.props.show===true && this.props.prediction != null){
         return (
             <Card id="human_game_paper">
                 <CardHeader id="card_header"
                     title={this.props.title}
                     className={this.props.header_class}
+                    avatar={ <Avatar icon={<FontIcon className="material-icons">{this.props.avatar}</FontIcon>} />
+      }
                 />
                 <div>
                     <img className="image_result" src={this.props.prediction.imageDataURL} />
@@ -90,7 +93,7 @@ class LastResult extends React.Component {
         );
     }
     return null
-  }
+    }
 }
 
 // Modern syntax < React 16.2.0
@@ -124,14 +127,6 @@ const HistResults = ({predictions, show}) => (
 const Scores = ({result}) => (
   <div>
         <Card id="score_card">
-            <CardHeader
-              title={"Score"}
-              //subtitle={"Detected " + pred.human.prediction}
-              //avatar={pred.human.imageDataURL}
-              //actAsExpander={true}
-              //showExpandableButton={true}
-              //className={pred.result.resultString}
-            />
             <CardText id="score_card_text">
               <h2><FontIcon className="material-icons" >person</FontIcon>
               <span>{result.human + " - " + result.computer}</span>
@@ -365,11 +360,15 @@ class Site extends React.Component {
                         <Col sm={6}>
                             {this.state.lastGame!=null?<LastResult show={this.state.predCounter>0}
                                                                    title="Your move:"
+                                                                   avatar="person"
                                                                    prediction={this.state.lastGame.human}
                                                                    header_class={this.state.lastGame.result.resultString} />: null }
                         </Col>
                         <Col sm={6}>
-                            {this.state.lastGame!=null?<LastResult show={this.state.predCounter>0} title="Computer's move:" prediction={this.state.lastGame.computer}/>: null }
+                            {this.state.lastGame!=null?<LastResult show={this.state.predCounter>0}
+                                                                   title="Computer's move:"
+                                                                   avatar="computer"
+                                                                   prediction={this.state.lastGame.computer}/>: null }
                         </Col>
                     </Row>
 

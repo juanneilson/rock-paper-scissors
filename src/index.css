@@ -64,12 +64,17 @@ body {
   background-color: #CDFECC;
 }
 
+.you_loose{
+  background-color: #FECCCC;
+}
+
 .header_loose{
   background-color: #FF8A8A;
 }
 
 #score_card{
-  max-height: 120px;
+  margin-top: 15px !important;
+  max-height: 70px;
   max-width: 250px;
   display:block;
     margin:auto;
